@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <title>Anniversary</title>
+  <style>
+    .float-up {
+      animation: floatUp 1.5s ease-in-out forwards;
+    }
+    @keyframes floatUp {
+      0% {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body class="bg-[#152238] relative overflow-hidden">
+
+  <form id="anniversaryForm">
+    <div class="flex items-center justify-center min-h-[100vh]">
+      <div class="flex flex-col items-center gap-2">
+        <label class="text-white text-[18px]" for="marriageDate">Enter your marriage date:</label>
+        <input id="marriageDate" class="border-[2px] border-white rounded px-6 py-2 bg-white" type="date" required/>
+        <button type="submit" class="bg-blue-500 px-5 py-2 rounded mt-2 hover:bg-blue-600 hover:duration-500 hover:text-white">
+          Submit
+        </button>
+        <!-- Error Message -->
+        <p id="errorMsg" class="text-red-500 text-[16px] mt-1 hidden">Incorrect marriage date!</p>
+      </div>
+    </div>
+  </form>
+
+  <!-- Cute couple image -->
+  <img id="dollImage"
+       src="bubu-bubu-dudu.gif"
+       alt="Cute Couple"
+       class="opacity-0 scale-0 transition-all duration-700 ease-in-out absolute top-[20vh] left-1/2 -translate-x-1/2 w-32 h-32" />
+
+  <!-- Crying bubu doll image -->
+  <img id="cryingDoll"
+       src="wrong_bubu.gif"
+       alt="Crying Doll"
+       class="opacity-0 scale-0 transition-all duration-700 ease-in-out absolute top-[15vh] left-1/2 -translate-x-1/2 w-32 h-32" />
+
+  <!-- Anniversary message at top -->
+  <p id="anniversaryMessage"
+     class="opacity-0 scale-0 transition-all duration-700 ease-in-out absolute top-[5vh] left-1/2 -translate-x-1/2 text-white text-[22px] font-semibold text-center">
+     🎉 Happy 1 month of marriage anniversary Bouuu ❤️ 🎉
+  </p>
+
+  <!-- Left balloon -->
+  <img id="balloonLeft"
+       src="b1.png"
+       alt="Balloon Left"
+       class="opacity-0 transition-all duration-700 ease-in-out absolute top-[10vh] left-[20vw] w-12 h-16" />
+
+  <!-- Right balloon -->
+  <img id="balloonRight"
+       src="b2.png"
+       alt="Balloon Right"
+       class="opacity-0 transition-all duration-700 ease-in-out absolute top-[10vh] right-[20vw] w-12 h-16" />
+
+  <script>
+    const form = document.getElementById('anniversaryForm');
+    const dateInput = document.getElementById('marriageDate');
+    const dollImage = document.getElementById('dollImage');
+    const cryingDoll = document.getElementById('cryingDoll');
+    const errorMsg = document.getElementById('errorMsg');
+    const anniversaryMessage = document.getElementById('anniversaryMessage');
+    const balloonLeft = document.getElementById('balloonLeft');
+    const balloonRight = document.getElementById('balloonRight');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const selectedDate = new Date(dateInput.value);
+      const selectedDay = selectedDate.getDate();
+
+      if (selectedDay === 9) {
+        // Show happy image
+        dollImage.classList.remove('opacity-0', 'scale-0');
+        dollImage.classList.add('opacity-100', 'scale-100');
+
+        // Show message
+        anniversaryMessage.classList.remove('opacity-0', 'scale-0');
+        anniversaryMessage.classList.add('opacity-100', 'scale-100', 'float-up');
+
+        // Show balloons
+        balloonLeft.classList.remove('opacity-0');
+        balloonLeft.classList.add('opacity-100', 'float-up');
+
+        balloonRight.classList.remove('opacity-0');
+        balloonRight.classList.add('opacity-100', 'float-up');
+
+        // Hide crying doll and error
+        cryingDoll.classList.remove('opacity-100', 'scale-100');
+        cryingDoll.classList.add('opacity-0', 'scale-0');
+        errorMsg.classList.add('hidden');
+
+        // Confetti burst
+        launchConfetti();
+      } else {
+        // Show crying doll
+        cryingDoll.classList.remove('opacity-0', 'scale-0');
+        cryingDoll.classList.add('opacity-100', 'scale-100');
+
+        // Show error
+        errorMsg.classList.remove('hidden');
+
+        // Hide happy image and message
+        dollImage.classList.remove('opacity-100', 'scale-100');
+        dollImage.classList.add('opacity-0', 'scale-0');
+
+        anniversaryMessage.classList.remove('opacity-100', 'scale-100', 'float-up');
+        anniversaryMessage.classList.add('opacity-0', 'scale-0');
+
+        // Hide balloons
+        balloonLeft.classList.remove('opacity-100', 'float-up');
+        balloonLeft.classList.add('opacity-0');
+
+        balloonRight.classList.remove('opacity-100', 'float-up');
+        balloonRight.classList.add('opacity-0');
+      }
+    });
+
+    // 🎊 Confetti burst function
+    function launchConfetti() {
+      const duration = 2 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+      const interval = setInterval(function () {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: Math.random(), y: Math.random() - 0.2 }
+        });
+      }, 200);
+    }
+  </script>
+</body>
+</html>
